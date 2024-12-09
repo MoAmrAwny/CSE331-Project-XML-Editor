@@ -138,103 +138,84 @@ while(getline(file,xmlstring)) {
         }
     }
 }
-//    // Printing the token vector
-//    for(int i = 0; i < xml.size(); i++)
-//       cout << xml[i] << '\n';
-//    for(int i = 0; i < xml.size(); i++) {
-    for (const user& u:users) {
-        cout<<"userrrrrrrrrrrrrrrrr"<<endl;
-        cout<<u.id<<endl<<u.name<<endl;
-        for (int f:u.followers) {
-            cout<<f<<endl;
-        } for (const post& p:u.posts) {
-            cout<<p.body<<endl;
-            for (string s:p.topics) {
-                cout<<s<<endl;
+cout<<"{"<<endl;
+cout<<R"("users": [)"<<endl;
+
+    for (int i=0;i<users.size();i++) {
+        cout<<"{"<<endl;
+        cout<<R"("id": ")"<<users[i].id<<"\","<<endl;
+        cout<<R"("name": ")"<<users[i].name<<"\","<<endl;
+        cout<<R"("posts": )"<<"["<<endl;
+        cout<<"{"<<endl;
+
+
+        cout<<R"("post": )"<<"["<<endl;
+
+            for (int j = 0; j < users[i].posts.size(); ++j) {
+
+
+            cout<<"{"<<endl;
+            cout<<R"("body": ")";
+           string body= users[i].posts[j].body;
+                std::reverse(body.begin(), body.end());
+                while(body.back()==' ')body.pop_back();
+                std::reverse(body.begin(), body.end());
+
+            cout<<body<<"\","<<endl;
+            cout<<R"("topics": )"<<"["<<endl;
+
+            cout<<"{"<<endl;
+                cout<<R"("topic": )";
+                if(users[i].posts[j].topics.size()>1)cout<<"["<<endl;
+
+            for (int k=0;k<users[i].posts[j].topics.size();k++) {
+                cout<<"\"";
+
+                string topic= users[i].posts[j].topics[k];
+                std::reverse(topic.begin(), topic.end());
+                while(topic.back()==' ')topic.pop_back();
+                std::reverse(topic.begin(), topic.end());
+
+                cout<<topic<<"\"";
+                if(k<users[i].posts[j].topics.size()-1)cout<<",";
+                cout<<endl;
             }
-        }
+                if(users[i].posts[j].topics.size()>1)cout<<"]"<<endl;
+
+            cout<<"}"<<endl;
+            cout<<"]"<<endl;
+            cout<<"}";
+            if(j<users[i].posts.size()-1)cout<<",";
+            cout<<endl;
+        }            cout<<"]"<<endl;
+
+
+
+
+        cout<<"}"<<endl;
+        cout<<"],"<<endl;
+
+
+
+
+        cout<<R"("followers": )"<<"["<<endl;
+        cout<<"{"<<endl;
+        cout<<R"("follower": )"<<"["<<endl;
+        for (int l=0;l<users[i].followers.size();l++) {
+            cout<<"{"<<endl;
+            cout<<R"("id": ")"<<users[i].followers[l]<<"\""<<endl;
+            cout<<"}";
+            if(l<users[i].followers.size()-1)cout<<",";
+            cout<<endl;
+        }cout<<"]"<<endl;
+        cout<<"}"<<endl;
+        cout<<"]"<<endl;
+        cout<<"}";
+        if(i<users.size()-1)cout<<",";
         cout<<endl;
     }
+    cout<<"]"<<endl;
+    cout<<"}";
+    ofstream outputFile( "sample.json");
 
-
-
-
-
-
-
-
-
-
-
-
-//    stack<string>brackets;
-//    vector<string> xml,json;
-//    string xml1,temp;
-//    //cin >> xml1;
-////xml.push_back("");
-////xml[0]+"";
-////xml[0].push_back('{');
-//xml1="<users><user><id>1</id><name>Ahmed Ali</name><posts><post><body>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</body><topics><topic>economy</topic><topic>finance</topic></topics></post><post><body>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</body><topics><topic>solar_energy</topic></topics></post></posts><followers><follower><id>2</id></follower><follower><id>3</id></follower></followers></user><user><id>2</id><name>Yasser Ahmed</name><posts><post><body>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</body><topics><topic>education</topic></topics></post></posts><followers><follower><id>1</id></follower></followers></user><user><id>3</id><name>Mohamed Sherif</name><posts><post><body>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</body><topics><topic>sports</topic></topics></post></posts><followers><follower><id>1</id></follower></followers></user></users>"; json.push_back("{");
-//    ifstream file( "sample.xml");
-///*separate xml1 to vector of strings*/
-//    // stringstream class check1
-////    stringstream check1(xml1);
-////    string intermediate;
-////    // Tokenizing w.r.t. '>'
-////    while(getline(check1, intermediate, '>'))
-////    {
-////        xml.push_back(intermediate);
-////    }
-//    string xmlstring;
-//while(file>>xmlstring){
-//    xml.push_back(xmlstring);
-//}
-//    // Printing the token vector
-//    for(int i = 0; i < xml.size(); i++)
-//       cout << xml[i] << '\n';
-//    for(int i = 0; i < xml.size(); i++) {
-//
-//    }
-//    for (int i = 0; i < xml.size(); ++i) {
-//if (xml[i][0]=='<'){ //if object
-//if(!brackets.empty()&&xml[i][1]=='/') {
-//    json.push_back(brackets.top());
-//    brackets.pop();
-//    json.push_back(brackets.top());
-//    brackets.pop();}
-//else {         string str=xml[i].substr(1);
-//    if(str==temp) { string s1=json[json.size() - 1];
-//        json[json.size() - 1]="[";
-//        size_t pos = s1.find(':'); //if sentence
-//string a=s1.substr(0,pos+1);
-//json.push_back(a);
-//        json.push_back(s1.substr(pos+2)+",");
-//         pos = xml[i+1].find('<'); //if sentence
-//         str=xml[i+1].substr(0,pos);
-//        json.push_back("\"" + str + "\"");
-//        json.push_back("]");i++;}
-//   else{ temp=str;
-//    json.push_back("\""+str+"\": ");
-//    if(xml[i+1][0]=='<') {
-//        json.push_back("[");
-//        json.push_back("{");
-//        brackets.push("]");
-//        brackets.push("}");
-//    }
-//   }
-//}
-//}else { size_t pos = xml[i].find('<'); //if sentence
-//    string str=xml[i].substr(0,pos);
-//    json[json.size()-1]+=("\"" + str + "\"");
-//    //brackets.push(",");
-//}
-//    }
-//
-//
-//    json.push_back("}");
-//
-//    for (string j:json) {
-//        cout<<j<<endl;
-//    }
-//    cout<<brackets.empty();
 }
