@@ -151,8 +151,6 @@ int temp=indentation;
     indentation++;
 outputFile<<R"("users": [)"<<endl;
 
-     temp=indentation;
-    while (temp--)outputFile<<"    ";
     for (int i=0;i<users.size();i++) {
         temp=indentation;
         while (temp--)outputFile<<"    ";
