@@ -2,338 +2,163 @@
 #include <bits/stdc++.h>
 using namespace std;
 
-class post{
-public:
-    string body;
-    vector<string>topics;
-};
-class user{
-public:
-    int id;
-    string name;
-    vector<post>posts;
-    vector<int>followers;
-    user(){
-        id=0;
-        name="";
-    }
-};
+ifstream file("sample.xml");
+ofstream outputFile("sample.json");
 
+stack<char> st;
 
-
-int main() {
-
-    ifstream file( "sample.xml");
-    ofstream outputFile( "sample.json");
-
-    string xmlstring;
-    vector<user>users;
-while(getline(file,xmlstring)) {
-    //cout << xmlstring << endl;
-
-    if (xmlstring == "<users>") {
-        while (getline(file, xmlstring)) {
-            //cout << xmlstring << endl;
-            size_t pos1 = xmlstring.find('<');
-            size_t pos2 = xmlstring.find('>');
-            if (xmlstring.substr(pos1 + 1, pos2 - pos1 - 1) == "user") {
-                user user;
-                while (getline(file, xmlstring)) {
-                    //cout << xmlstring << endl;
-
-                    pos1 = xmlstring.find('<');
-                    pos2 = xmlstring.find('>');
-                    size_t pos3 = xmlstring.find('/');
-                    string checkObject = xmlstring.substr(pos1 + 1, pos2 - pos1 - 1);
-
-                    if (checkObject == "/user")break;
-                    else if (checkObject == "id") {
-                        user.id = stoi(xmlstring.substr(pos2 + 1, pos3 - pos2 - 1 - 1));
-
-                    }
-                    else if (checkObject == "name") {
-                        user.name = xmlstring.substr(pos2 + 1, pos3 - pos2 - 1 - 1);
-
-                    }
-                    else if (checkObject == "posts") {
-                        while (getline(file, xmlstring)) {
-                            //cout << xmlstring << endl;
-
-                            pos1 = xmlstring.find('<');
-                            pos2 = xmlstring.find('>');
-                            checkObject = xmlstring.substr(pos1 + 1, pos2 - pos1 - 1);
-                            if (checkObject == "/posts")break;
-                            else if (checkObject == "post") {
-                                post post;
-                                while (getline(file, xmlstring)) {
-                                    //cout << xmlstring << endl;
-
-                                    pos1 = xmlstring.find('<');
-                                    pos2 = xmlstring.find('>');
-                                    string chechObjTopic = xmlstring.substr(pos1 + 1, pos2 - pos1 - 1);
-                                    if (chechObjTopic == "/post")break;
-                                    else if (chechObjTopic == "body") {
-                                        while (getline(file, xmlstring)) {
-                                            //cout << xmlstring << endl;
-
-                                            pos1 = xmlstring.find('<');
-                                            pos2 = xmlstring.find('>');
-                                            checkObject = xmlstring.substr(pos1 + 1, pos2 - pos1 - 1);
-                                            if (checkObject == "/body")break;
-                                            else {
-                                                post.body = xmlstring;
-                                            }
-                                        }
-                                    } else if (chechObjTopic == "topics") {
-                                        while (getline(file, xmlstring)) {
-                                            //cout << xmlstring << endl;
-
-                                            pos1 = xmlstring.find('<');
-                                            pos2 = xmlstring.find('>');
-                                            checkObject = xmlstring.substr(pos1 + 1, pos2 - pos1 - 1);
-                                            if (checkObject == "/topics")break;
-                                            else if (checkObject == "topic") {
-                                                while (getline(file, xmlstring)) {
-                                                    //cout << xmlstring << endl;
-
-                                                    pos1 = xmlstring.find('<');
-                                                    pos2 = xmlstring.find('>');
-                                                    checkObject = xmlstring.substr(pos1 + 1, pos2 - pos1 - 1);
-                                                    if (checkObject == "/topic")break;
-                                                    post.topics.push_back(xmlstring);
-                                                }
-                                            }
-                                        }
-                                    }
-                                }
-                                user.posts.push_back(post);
-
-                            }
-                        }
-                    } else if (checkObject == "followers") {
-                        while (getline(file, xmlstring)) {
-                            //cout << xmlstring << endl;
-
-                            pos1 = xmlstring.find('<');
-                            pos2 = xmlstring.find('>');
-                            checkObject = xmlstring.substr(pos1 + 1, pos2 - pos1 - 1);
-                            if (checkObject == "/followers")break;
-                            else if (checkObject == "follower") {
-                                while (getline(file, xmlstring)) {
-                                    //cout << xmlstring << endl;
-
-                                    pos1 = xmlstring.find('<');
-                                    pos2 = xmlstring.find('>');
-                                    pos3 = xmlstring.find('/');
-                                    if (xmlstring.substr(pos1 + 1, pos2-pos1-1) == "/follower") { break; }
-                                    user.followers.push_back(stoi(xmlstring.substr(pos2 + 1, pos3 - 1 - 1 - pos2)));
-                                }
-
-                            }
-                        }
-                    }
-                }
-                users.push_back(user);
-
-            }
-        }
+void closeTag() {
+    if (!st.empty()) {
+        outputFile << st.top();
+        st.pop();
     }
 }
 
-int indentation=0;
+void arrayTag(string tagName) {
+    outputFile << "\"" << tagName << "\": [";
+    st.push(']');
+}
 
+void sentencearrayTag(string tagName, string sentence) {
+    outputFile << "\"" << tagName << "\": [";
+    outputFile << "\"" << sentence << "\"";
+    st.push(']');
+}
 
-outputFile<<"{"<<endl;
-indentation++;
+void sentenceTag(string tagName, string sentence) {
+    outputFile << "\"" << tagName << "\": \"" << sentence << "\"";
+}
 
-int temp=indentation;
-    while (temp--)outputFile<<"    ";
-    indentation++;
-outputFile<<R"("users": [)"<<endl;
+void normalTag(string tagName) {
+    outputFile << "\"" << tagName << "\": {";
+    st.push('}');
+}
 
-    for (int i=0;i<users.size();i++) {
-        temp=indentation;
-        while (temp--)outputFile<<"    ";
-        outputFile<<"{"<<endl;
-        indentation++;
+void justsentence(string sentence) {
+    outputFile << "\"" << sentence << "\"";
+}
 
-         temp=indentation;
-        while (temp--)outputFile<<"    ";
-        outputFile<<R"("id": ")"<<users[i].id<<"\","<<endl;
-        temp=indentation;
-        while (temp--)outputFile<<"    ";
-        outputFile<<R"("name": ")"<<users[i].name<<"\","<<endl;
-        temp=indentation;
-        while (temp--)outputFile<<"    ";
-        outputFile<<R"("posts": )"<<"["<<endl;
-        indentation++;
+int main() {
+    string xmlString, prevXML;         // whole strings
+    string previousTag, tagName;      // tag names
 
-        temp=indentation;
-        while (temp--)outputFile<<"    ";
-        outputFile<<"{"<<endl;
+    getline(file, prevXML);           // first tag
+    size_t poss1 = prevXML.find('<');
+    size_t poss2 = prevXML.find('>');
+    previousTag = prevXML.substr(poss1 + 1, poss2 - poss1 - 1);
 
-        indentation++;
+    // flags
+    bool arr, sametagname, tagname1, tagname2, sentencetag1, sentencetag2, closingtag1, closingtag2, notasentence;
 
-        temp=indentation;
-        while (temp--)outputFile<<"    ";
-        outputFile<<R"("post": )"<<"["<<endl;
-        indentation++;
-            for (int j = 0; j < users[i].posts.size(); ++j) {
+    outputFile << "{\"" << previousTag << "\": {";
 
-                temp=indentation;
-                while (temp--)outputFile<<"    ";
-            outputFile<<"{"<<endl;
-                indentation++;
+    while (getline(file, xmlString)) {
+        // locate tag names
+        size_t pos1 = xmlString.find('<');
+        size_t pos2 = xmlString.find('>');
+        size_t pos3 = xmlString.find('/');
+        poss1 = prevXML.find('<');
+        poss2 = prevXML.find('>');
+        size_t poss3 = prevXML.find('/');
 
-                temp=indentation;
-                while (temp--)outputFile<<"    ";
-            outputFile<<R"("body": ")";
-           string body= users[i].posts[j].body;
-                std::reverse(body.begin(), body.end());
-                while(body.back()==' ')body.pop_back();
-                std::reverse(body.begin(), body.end());
+        tagName = xmlString.substr(pos1 + 1, pos2 - pos1 - 1);
+        previousTag = prevXML.substr(poss1 + 1, poss2 - poss1 - 1);
 
-            outputFile<<body<<"\","<<endl;
+        // initialize flags at every iteration
+        arr = false, sametagname = false, tagname1 = false, tagname2 = false;
+        sentencetag1 = false, sentencetag2 = false, closingtag1 = false, closingtag2 = false;
 
+        // extract sentence
+        string sentence = xmlString.substr(pos2 + 1, pos3 - 1 - pos2 - 1);
 
-                temp=indentation;
-                while (temp--)outputFile<<"    ";
-            outputFile<<R"("topics": )"<<"["<<endl;
-                indentation++;
-
-                temp=indentation;
-                while (temp--)outputFile<<"    ";
-            outputFile<<"{"<<endl;
-                indentation++;
-
-                temp=indentation;
-                while (temp--)outputFile<<"    ";
-                outputFile<<R"("topic": )";
-                if(users[i].posts[j].topics.size()==1) {  outputFile<<"\"";
-
-                    string topic= users[i].posts[j].topics[0];
-                    std::reverse(topic.begin(), topic.end());
-                    while(topic.back()==' ')topic.pop_back();
-                    std::reverse(topic.begin(), topic.end());
-
-
-                    outputFile<<topic<<"\""<<endl;}
-                else{
-                    outputFile << "[" << endl;
-                indentation++;
-
-            for (int k=0;k<users[i].posts[j].topics.size();k++) {
-                temp=indentation;
-                while (temp--)outputFile<<"    ";
-                outputFile<<"\"";
-
-                string topic= users[i].posts[j].topics[k];
-                std::reverse(topic.begin(), topic.end());
-                while(topic.back()==' ')topic.pop_back();
-                std::reverse(topic.begin(), topic.end());
-
-
-                outputFile<<topic<<"\"";
-                if(k<users[i].posts[j].topics.size()-1)outputFile<<",";
-                outputFile<<endl;
+        // for previous string
+        if (poss3 != string::npos) {
+            if (poss2 < poss3) {
+                sentencetag1 = true;
+            } else {
+                closingtag1 = true;
             }
-                }
-
-                if(users[i].posts[j].topics.size()>1) {  indentation--;
-                    temp=indentation;
-                    while (temp--)outputFile<<"    ";
-                    outputFile << "]" << endl; }
-                indentation--;
-                temp=indentation;
-                while (temp--)outputFile<<"    ";
-            outputFile<<"}"<<endl;
-                indentation--;
-                temp=indentation;
-                while (temp--)outputFile<<"    ";
-            outputFile<<"]"<<endl;
-                indentation--;
-                temp=indentation;
-                while (temp--)outputFile<<"    ";
-            outputFile<<"}";
-            if(j<users[i].posts.size()-1)outputFile<<",";
-            outputFile<<endl;
-        }         indentation--;
-        temp=indentation;
-        while (temp--)outputFile<<"    ";   outputFile<<"]"<<endl;
-
-
-        indentation--;
-        temp=indentation;
-        while (temp--)outputFile<<"    ";
-
-        outputFile<<"}"<<endl;
-        indentation--;
-        temp=indentation;
-        while (temp--)outputFile<<"    ";
-        outputFile<<"],"<<endl;
-
-
-        temp=indentation;
-        while (temp--)outputFile<<"    ";
-
-        outputFile<<R"("followers": )"<<"["<<endl;
-        indentation++;
-
-        temp=indentation;
-        while (temp--)outputFile<<"    ";
-        outputFile<<"{"<<endl;
-        indentation++;
-
-        temp=indentation;
-        while (temp--)outputFile<<"    ";
-        outputFile<<R"("follower": )"<<"["<<endl;
-        indentation++;
-
-
-        for (int l=0;l<users[i].followers.size();l++) {
-            temp=indentation;
-            while (temp--)outputFile<<"    ";
-            outputFile<<"{"<<endl;
-            indentation++;
-            temp=indentation;
-            while (temp--)outputFile<<"    ";
-            outputFile<<R"("id": ")"<<users[i].followers[l]<<"\""<<endl;
-            indentation--;
-            temp=indentation;
-            while (temp--)outputFile<<"    ";
-            outputFile<<"}";
-            if(l<users[i].followers.size()-1)outputFile<<",";
-
-            outputFile<<endl;
+        } else {
+            tagname1 = true;
         }
 
-        indentation--;
-        temp=indentation;
-        while (temp--)outputFile<<"    ";
-        outputFile<<"]"<<endl;
-        indentation--;
-        temp=indentation;
-        while (temp--)outputFile<<"    ";
-        outputFile<<"}"<<endl;
-        indentation--;
-        temp=indentation;
-        while (temp--)outputFile<<"    ";
-        outputFile<<"]"<<endl;
-        indentation--;
-        temp=indentation;
-        while (temp--)outputFile<<"    ";
-        outputFile<<"}";
-        if(i<users.size()-1)outputFile<<",";
-        outputFile<<endl;
-    }
-    indentation--;
-    temp=indentation;
-    while (temp--)outputFile<<"    ";
-    outputFile<<"]"<<endl;
-    indentation--;
-    temp=indentation;
-    while (temp--)outputFile<<"    ";
-    outputFile<<"}";
-    //cout<<"indent"<<indentation;
+        // for current string
+        if (pos3 != string::npos) {
+            if (pos2 < pos3) {
+                sentencetag2 = true;
+            } else {
+                closingtag2 = true;
+            }
+        } else {
+            tagname2 = true;
+        }
 
+        if (tagName == previousTag.substr(0, previousTag.size() - 1)) arr = true;
+        if (previousTag.substr(1) == tagName) sametagname = true;
+
+        if (tagname1 && tagname2 && arr) {                // if array
+            arrayTag(tagName);
+            notasentence = true;
+
+        } else if (tagname1 && sentencetag2 && arr) {
+            sentencearrayTag(tagName, sentence);
+            notasentence = true;
+
+        } else if (tagname1 && tagname2) {                // not array
+            if (notasentence) {
+                st.push('}');
+                outputFile << '{';
+            }
+            normalTag(tagName);
+            notasentence = false;
+
+        } else if (tagname1 && sentencetag2) {            // <user> <id>2</id>
+            if (notasentence) {
+                st.push('}');
+                outputFile << "{";
+            }
+            sentenceTag(tagName, sentence);
+
+        } else if (sentencetag1 && sentencetag2) {        // <id>2</id> <name>ahmed</name>
+            outputFile << ",";
+            if (previousTag == tagName) {
+                justsentence(sentence);                  // in an array
+            } else {
+                sentenceTag(tagName, sentence);
+            }
+
+        } else if (sentencetag1 && tagname2) {           // <body>2</body> <topics>
+            outputFile << ",";
+            normalTag(tagName);
+
+        } else if (closingtag1 && tagname2 && sametagname) { //</topic> <topic>
+            if (!st.empty() && st.top() == ']') {
+                outputFile << ",";
+            } else {
+                if (!st.empty()) {
+                    outputFile << st.top();
+                    outputFile << ",";
+                    st.pop();
+                }
+            }
+
+        } else if (closingtag1 && closingtag2) {          //</topics> </post>
+            closeTag();
+
+        } else if (closingtag1 && tagname2) {             //</posts> <followers>
+            closeTag();
+            closeTag();
+            outputFile << ",";
+            normalTag(tagName);
+
+        } else if (sentencetag1 && closingtag2) {         //<id>2</id> </follower>
+            closeTag();
+        }
+
+        prevXML = xmlString;
+    }
+
+    while (!st.empty()) closeTag();
+    outputFile << "}}";
+    cout << st.size();
 }
