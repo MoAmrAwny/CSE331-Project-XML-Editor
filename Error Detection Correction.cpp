@@ -18,8 +18,8 @@ void saveXMLToFile(const string& fileName, const string& xmlContent) { // to tur
 
 
 vector<pair<string, size_t>> extractTags(const string& xmlContent) {
-    vector<pair<string, size_t>> tags; // Vector to store tag names and their line numbers
-    size_t lineNumber = 1;             // Start with line 1
+    vector<pair<string, size_t>> tags; 
+    size_t lineNumber = 1;             
     size_t pos = 0;                    // Current parsing position
 
     while (pos < xmlContent.size()) {
@@ -57,7 +57,7 @@ vector<pair<string, size_t>> extractTags(const string& xmlContent) {
 
 
 vector<pair<string, size_t>> XML_detection(const string& xmlContent) {
-    vector<pair<string, size_t>> tagsWithLines = extractTags(xmlContent); // Extract tags and line numbers
+    vector<pair<string, size_t>> tagsWithLines = extractTags(xmlContent); 
     stack<pair<string, size_t>> tagStack; // Stack for opening tags
     vector<pair<string, size_t>> errors; // Vector for error storage
     vector<pair<string, size_t>> missingopening; // Vector for error storage
@@ -77,9 +77,9 @@ vector<pair<string, size_t>> XML_detection(const string& xmlContent) {
                 string openingTag = tagStack.top().first;
 
                 if (closingTag == openingTag) {
-                    tagStack.pop(); // Proper match, remove the opening tag from stack
+                    tagStack.pop(); 
                 } else {
-                    // Push it in errors and continue searching for a match
+                    // Push  and continue searching for a match
                     errors.push_back(tagStack.top());
                     tagStack.pop();
 
@@ -94,7 +94,7 @@ vector<pair<string, size_t>> XML_detection(const string& xmlContent) {
                     }
 
                     if (found) {
-                        tagStack.pop(); // Remove the matched tag
+                        tagStack.pop(); 
                         // Push back the unmatched tags to the stack
                         for (int j = errors.size() - 1; j >= 0; --j) {
                             tagStack.push(errors[j]);
@@ -133,7 +133,7 @@ vector<pair<string, size_t>> XML_detection(const string& xmlContent) {
     while (k >= 0) {
      errors.push_back(missingopening[k--]);
     }
-    // Summary of errors
+    
     if (countErrors == 0) {
         cout << "No errors, all tags are properly matched!" << endl;
     } else {
@@ -169,17 +169,16 @@ void XML_correction(vector<pair<string, size_t>> errors, string& xmlContent) {
                 line = "<" + tag.substr(1) + ">" + line;   // Opening tag
             }
 
-            ++errorIndex;  // Move to the next error
+            ++errorIndex; 
         }
 
-
-        correctedContent << line <<"\n";  // Add the (corrected) line to the result
+        correctedContent << line <<"\n";  
         //if (stream.peek() != EOF) correctedContent << "\n";
         ++lineNumber;
     }
 
-    // Now update the original xmlContent with corrected content
+    
     xmlContent = correctedContent.str();
-    saveXMLToFile("outputXML.xml", xmlContent);  // Save corrected content to file
+    saveXMLToFile("outputXML.xml", xmlContent); 
 
 }
