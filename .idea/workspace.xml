@@ -22,8 +22,13 @@
   <component name="ChangeListManager">
     <list default="true" id="3bc80baa-c7e5-4bd7-812e-2ac29ee159b8" name="Changes" comment=".">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cmake-build-debug/.ninja_deps" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-debug/.ninja_deps" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cmake-build-debug/.ninja_log" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-debug/.ninja_log" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/CSE331_Project.dir/main.cpp.obj" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/CSE331_Project.dir/main.cpp.obj" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cmake-build-debug/CSE331_Project.exe" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-debug/CSE331_Project.exe" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/cmake-build-debug/Testing/Temporary/LastTest.log" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-debug/Testing/Temporary/LastTest.log" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/cmake-build-debug/sample.json" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-debug/sample.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cmake-build-debug/sample.xml" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-debug/sample.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/main.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/main.cpp" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -107,7 +112,7 @@
       <workItem from="1733778127209" duration="1109000" />
       <workItem from="1733950071977" duration="1925000" />
       <workItem from="1733952810646" duration="2058000" />
-      <workItem from="1734083048045" duration="36715000" />
+      <workItem from="1734083048045" duration="41229000" />
     </task>
     <task id="LOCAL-00001" summary="testing">
       <option name="closed" value="true" />
@@ -173,7 +178,15 @@
       <option name="project" value="LOCAL" />
       <updated>1733955186705</updated>
     </task>
-    <option name="localTasksCounter" value="9" />
+    <task id="LOCAL-00009" summary=".">
+      <option name="closed" value="true" />
+      <created>1734126175173</created>
+      <option name="number" value="00009" />
+      <option name="presentableId" value="LOCAL-00009" />
+      <option name="project" value="LOCAL" />
+      <updated>1734126175173</updated>
+    </task>
+    <option name="localTasksCounter" value="10" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
