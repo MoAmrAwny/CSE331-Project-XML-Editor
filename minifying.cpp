@@ -1,4 +1,4 @@
-#define Minifying.h
+#include "Minifying.h"
 
 string minifying(const string& str) {
     string result;
