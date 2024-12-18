@@ -1,5 +1,4 @@
-#include <iostream>
-#include "Error_detection.h"
+#include "Error_detection_correction.h"
 using namespace std;
 
 vector<pair<string, size_t>> extractTags(const string& xmlContent) {
