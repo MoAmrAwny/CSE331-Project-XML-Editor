@@ -73,7 +73,7 @@ public:
 
 
 
-
+//Compression and decrompression using LZW algorithm
 vector<unsigned short int> compress(vector<char> uncompressed_file)
 {
 	dictionary x;
