@@ -7,7 +7,7 @@
 
 
 using namespace std;
-
+//Compression and decrompression using LZW algorithm
 vector<unsigned short int> compress(vector<char> uncompressed_file);
 
 vector<char> decompress(vector<unsigned short> compressed_file);
