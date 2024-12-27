@@ -8,4 +8,6 @@ add_executable(CSE331_Project
         .idea/modules.xml
         .idea/vcs.xml
         .idea/workspace.xml
-        main.cpp)
+        main.cpp
+        convertxmltojson.h
+        convertxmltojson.cpp)

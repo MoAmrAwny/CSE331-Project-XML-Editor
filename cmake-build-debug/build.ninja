@@ -55,6 +55,12 @@ build CMakeFiles/CSE331_Project.dir/main.cpp.obj: CXX_COMPILER__CSE331_Project_u
   OBJECT_DIR = CMakeFiles\CSE331_Project.dir
   OBJECT_FILE_DIR = CMakeFiles\CSE331_Project.dir
 
+build CMakeFiles/CSE331_Project.dir/convertxmltojson.cpp.obj: CXX_COMPILER__CSE331_Project_unscanned_Debug C$:/Users/T.S/CLionProjects/CSE331-Project/convertxmltojson.cpp || cmake_object_order_depends_target_CSE331_Project
+  DEP_FILE = CMakeFiles\CSE331_Project.dir\convertxmltojson.cpp.obj.d
+  FLAGS = -g -std=gnu++14 -fdiagnostics-color=always
+  OBJECT_DIR = CMakeFiles\CSE331_Project.dir
+  OBJECT_FILE_DIR = CMakeFiles\CSE331_Project.dir
+
 
 # =============================================================================
 # Link build statements for EXECUTABLE target CSE331_Project
@@ -63,7 +69,7 @@ build CMakeFiles/CSE331_Project.dir/main.cpp.obj: CXX_COMPILER__CSE331_Project_u
 #############################################
 # Link the executable CSE331_Project.exe
 
-build CSE331_Project.exe: CXX_EXECUTABLE_LINKER__CSE331_Project_Debug CMakeFiles/CSE331_Project.dir/main.cpp.obj
+build CSE331_Project.exe: CXX_EXECUTABLE_LINKER__CSE331_Project_Debug CMakeFiles/CSE331_Project.dir/main.cpp.obj CMakeFiles/CSE331_Project.dir/convertxmltojson.cpp.obj
   FLAGS = -g
   LINK_LIBRARIES = -lkernel32 -luser32 -lgdi32 -lwinspool -lshell32 -lole32 -loleaut32 -luuid -lcomdlg32 -ladvapi32
   OBJECT_DIR = CMakeFiles\CSE331_Project.dir
