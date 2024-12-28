@@ -10,8 +10,7 @@
 
 using namespace std;
 
-void errorHandling
-
+string error_handling( string& xmlContent);
 
 
 #endif //ERROR_DETECTION_CORRECTION_H
