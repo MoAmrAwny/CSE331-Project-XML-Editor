@@ -173,7 +173,6 @@ void PrettifyXML(vector<string> input_xml,ofstream &outputFile) {
         cerr << "Failed to open output file for writing!" << endl;
         //return 1;
     }
-    outputFile << "<?xml version=\"1.0\"?>\n"; // Add XML declaration
     outputFile << xmlOutput.str();
     outputFile.close();
 
