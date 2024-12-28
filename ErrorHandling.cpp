@@ -12,12 +12,28 @@ void saveXMLToFile(const string& fileName, const string& xmlContent) { // to tur
     }
 }
 
-string error_handling( string& xmlContent, string fileName) {
+void error_handling(ifstream & inputfile,ofstream &outputfile) {
+
+    if (!inputfile.is_open()) {
+        cerr << "Error: Could not open file "  << endl;
+
+    }
+
+    string xmlContent, line;
+
+    // Read the file line by line
+    while (getline(inputfile, line)) {
+        xmlContent += line + "\n"; // Append each line to the xmlContent string
+    }
+
+    inputfile.close(); // Close the file
+
     vector<string>line_by_line;
 
     char startchar='<';
     char endchar='>';
     int count_errors=0;
+
 
 
     string tag;
@@ -127,10 +143,10 @@ string error_handling( string& xmlContent, string fileName) {
                         while (check_pos > 0 && isspace(xmlContent[check_pos])) {
                             check_pos--;
                         }
-                          if(check_pos > 0 && xmlContent[check_pos] != '>') {
-                              size_t start=xmlContent.rfind('>',check_pos);
-                              xmlContent.insert(start + 1, opening_tag);
-                          }
+                        if(check_pos > 0 && xmlContent[check_pos] != '>') {
+                            size_t start=xmlContent.rfind('>',check_pos);
+                            xmlContent.insert(start + 1, opening_tag);
+                        }
                         else
                             xmlContent.insert(check_pos+1, opening_tag);
 
@@ -197,16 +213,11 @@ string error_handling( string& xmlContent, string fileName) {
 
 
     }
-    ofstream file(fileName);
-    if (file.is_open()) {
-        file << xmlContent;
-        file.close();
-        // cout << "XML content saved to " << fileName << endl;
-    } else {
-        // cout << "Error: Unable to open file " << fileName << endl;
-    }
-    // cout<<"There are "<<count_errors<<" errors."<<endl;
-        // saveXMLToFile("outputXML.xml", xmlContent);  // Save corrected content to file
-        return xmlContent;
+    cout<<"There are "<<count_errors<<" errors."<<endl;
+
+    outputfile<< xmlContent; // Write the corrected XML content to the new file
+    outputfile.close(); // Close the file
+
+    //  return xmlContent;
 
 }
