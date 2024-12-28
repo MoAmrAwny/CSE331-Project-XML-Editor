@@ -1,6 +1,17 @@
 #include "ErrorHandling.h"
 
-string error_handling( string& xmlContent) {
+
+void saveXMLToFile(const string& fileName, const string& xmlContent) { // to turn the string to the xmlfile
+    ofstream file(fileName);
+    if (file.is_open()) {
+        file << xmlContent;
+        file.close();
+        cout << "XML content saved to " << fileName << endl;
+    } else {
+        cout << "Error: Unable to open file " << fileName << endl;
+    }
+
+string error_handling( string& xmlContent, string outputfilename) {
     vector<string>line_by_line;
 
     char startchar='<';
