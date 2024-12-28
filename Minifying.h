@@ -4,5 +4,5 @@ using namespace std;
 #include <string>
 #include <vector>
 
-string minifying(const string& str);
+void minifying(const string& fileName);
 int main();
