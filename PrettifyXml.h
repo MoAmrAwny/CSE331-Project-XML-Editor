@@ -23,6 +23,6 @@ XmlNode* parse_node(const vector<string>& s, int& idx);
 
 void print_node(XmlNode* node, ostringstream& out, int level);
 
-vector<string> ReadXml(string filename);
+vector<string> ReadXml(ifstream& filename);
 
 void PrettifyXML(vector<string> input_xml,ofstream &outputFile);

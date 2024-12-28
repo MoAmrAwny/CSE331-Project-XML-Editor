@@ -119,10 +119,10 @@ void print_node(XmlNode* node, ostringstream& out, int level =0) {
     out << "</" << node->name << ">" << endl;
 }
 
-vector<string> ReadXml(string filename) {
+vector<string> ReadXml(ifstream& in) {
     vector<string>input_xml;
     string line,xmlContent="";
-    ifstream in(filename);  //command[3]
+    //ifstream in(filename);  //command[3]
     //in here is command[3]
     //
     // read file into input_xml
