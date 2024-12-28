@@ -10,8 +10,9 @@ void saveXMLToFile(const string& fileName, const string& xmlContent) { // to tur
     } else {
         cout << "Error: Unable to open file " << fileName << endl;
     }
+}
 
-string error_handling( string& xmlContent, string outputfilename) {
+string error_handling( string& xmlContent, string filename) {
     vector<string>line_by_line;
 
     char startchar='<';
@@ -196,8 +197,16 @@ string error_handling( string& xmlContent, string outputfilename) {
 
 
     }
-    cout<<"There are "<<count_errors<<" errors."<<endl;
-        saveXMLToFile("outputXML.xml", xmlContent);  // Save corrected content to file
+    ofstream file(fileName);
+    if (file.is_open()) {
+        file << xmlContent;
+        file.close();
+        // cout << "XML content saved to " << fileName << endl;
+    } else {
+        // cout << "Error: Unable to open file " << fileName << endl;
+    }
+    // cout<<"There are "<<count_errors<<" errors."<<endl;
+        // saveXMLToFile("outputXML.xml", xmlContent);  // Save corrected content to file
         return xmlContent;
 
 }
