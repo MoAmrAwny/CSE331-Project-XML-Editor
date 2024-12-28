@@ -1,4 +1,4 @@
-#include 
+#include "ErrorHandling.h"
 
 string error_handling( string& xmlContent) {
     vector<string>line_by_line;
