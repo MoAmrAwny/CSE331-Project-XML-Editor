@@ -12,7 +12,7 @@ void saveXMLToFile(const string& fileName, const string& xmlContent) { // to tur
     }
 }
 
-string error_handling( string& xmlContent, string filename) {
+string error_handling( string& xmlContent, string fileName) {
     vector<string>line_by_line;
 
     char startchar='<';
