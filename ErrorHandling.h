@@ -10,7 +10,7 @@
 
 using namespace std;
 
-string error_handling( string& xmlContent);
+void error_handling(ifstream & inputfile,ofstream &outputfile) 
 void saveXMLToFile(const string& fileName, const string& xmlContent);
 
 #endif //ERROR_DETECTION_CORRECTION_H
