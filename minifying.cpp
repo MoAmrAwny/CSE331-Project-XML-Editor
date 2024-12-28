@@ -1,6 +1,7 @@
 #include "Minifying.h"
 
-void minifying(const string& fileName) {
+
+void minifying(const string& fileName , string output) {
     // Read the XML content from the file
     ifstream inputFile(fileName);
     if (!inputFile.is_open()) {
@@ -39,14 +40,14 @@ void minifying(const string& fileName) {
     }
 
     // Overwrite the original file with the minified content
-    ofstream outputFile(fileName);
+    ofstream outputFile(output);
     if (!outputFile.is_open()) {
-        cerr << "Error: Could not open file " << fileName << " for writing." << endl;
+        cerr << "Error: Could not open file " << output << " for writing." << endl;
         return; // Exit the function
     }
-    outputFile << result; 
-    outputFile.close();   
+    outputFile << result; // Write the minified content back to the file
+    outputFile.close();   // Close the output file
 
-    cout << "File '" << fileName << "' has been minified successfully.\n";
+    cout << "File '" << output << "' has been minified successfully.\n";
 }
 
