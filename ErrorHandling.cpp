@@ -79,7 +79,7 @@ void error_handling(ifstream & inputfile,ofstream &outputfile) {
                         next_char_pos++;
                     }
                     // Check if the next meaningful character is not '<' so it is content
-                    if (next_char_pos < xmlContent.size() && xmlContent[next_char_pos] != '<') { //<id>    <name> hussien </name> </id>
+                    if (next_char_pos < xmlContent.size() && xmlContent[next_char_pos] != '<') { 
 
                         size_t next_tag = xmlContent.find('<',next_char_pos); // Find the position of the next tag
                         size_t closing_of_next = xmlContent.find('>',next_tag);
