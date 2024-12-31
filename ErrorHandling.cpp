@@ -33,9 +33,8 @@ void error_handling(ifstream & inputfile,ofstream &outputfile) {
     char startchar='<';
     char endchar='>';
     int count_errors=0;
-
-
-
+    int current_line=1;
+    vector<int>line_number;
     string tag;
 
     vector<string>opening_tags;
@@ -43,6 +42,9 @@ void error_handling(ifstream & inputfile,ofstream &outputfile) {
 
     size_t pos=0;
     while (pos < xmlContent.size()) {
+
+        if(xmlContent[pos]=='\n')
+            current_line++;
 
         startind = xmlContent.find(startchar, pos); // search for '<'
         if (startind==string::npos) { // there is no opening tag,logical error
@@ -59,6 +61,7 @@ void error_handling(ifstream & inputfile,ofstream &outputfile) {
         if (tag[1] != '/') // it is an opening tag
         {
             opening_tags.push_back(tag);
+            line_number.push_back(current_line);
 
         }
 
@@ -69,44 +72,14 @@ void error_handling(ifstream & inputfile,ofstream &outputfile) {
                 string opening_tag_name = opening_tags.back().substr(1, opening_tags.back().size() - 2); // Extract tag name from "<tag>"
 
                 if (closing_tag_name == opening_tag_name) { // Match found
-
-                    size_t opening_tag_pos = xmlContent.find(opening_tag_name); // Find the position of the opening tag
-                    size_t closing_of_thisTag = xmlContent.find('>',opening_tag_pos);
-
-                    // Find the next meaningful character after the closing tag
-                    size_t next_char_pos = closing_of_thisTag + 1;
-                    while (next_char_pos < xmlContent.size() && isspace(xmlContent[next_char_pos]))  {
-                        next_char_pos++;
-                    }
-                    // Check if the next meaningful character is not '<' so it is content
-                    if (next_char_pos < xmlContent.size() && xmlContent[next_char_pos] != '<') { 
-
-                        size_t next_tag = xmlContent.find('<',next_char_pos); // Find the position of the next tag
-                        size_t closing_of_next = xmlContent.find('>',next_tag);
-                        string next=xmlContent.substr(next_tag,closing_of_next - next_tag +1);
-                        if((next)==tag){
-                            opening_tags.pop_back();
-
-                        }
-                        else {
-                            cout<<"There is a missing closing tag for "<<opening_tags.back()<<"on line "<<endl;
-                            count_errors++;
-                            size_t endofcontent=xmlContent.find('<',closing_of_thisTag);
-                            xmlContent.insert(endofcontent-1,tag);
-                            opening_tags.pop_back(); // Remove the matched opening tag
-
-                        }
-                    }
-
-                    else {
-                        opening_tags.pop_back();
-                    }
+                    opening_tags.pop_back();
 
                 }
                 else if (closing_tag_name != opening_tag_name) { // not equal
 
                     bool found = false;
-                    for (auto it = opening_tags.begin(); it != opening_tags.end(); ++it) {
+                    auto it2=line_number.begin();
+                    for (auto it = opening_tags.begin(); it != opening_tags.end(); ++it, ++it2) {
                         if (tag.substr(2) == it->substr(1)) {   // Compare the closing tag with the opening tags in vector
                             found = true;
                             size_t opening_tag_pos = xmlContent.find(*it); // Find the position of the opening tag
@@ -120,8 +93,9 @@ void error_handling(ifstream & inputfile,ofstream &outputfile) {
                             if(xmlContent[next_char_pos]!='<') {
                                 size_t endofcontent=xmlContent.find('<',closing_of_thisTag);
                                 xmlContent.insert(endofcontent-1,tag);
-                                cout<<"There is a missing closing tag for "<<*it<<"on line "<<endl;
+                                cout<<"There is a missing closing tag for "<<*it<<"on line "<<*it2<<endl;
                                 opening_tags.erase(it); // Erase the matched opening tag from vector
+                                line_number.erase(it2);
                                 count_errors++;
 
 
@@ -129,6 +103,7 @@ void error_handling(ifstream & inputfile,ofstream &outputfile) {
                             }
                             else {
                                 opening_tags.erase(it); // we don't need to insert anything in file
+                                line_number.erase(it2);
 
                             }
 
@@ -150,7 +125,7 @@ void error_handling(ifstream & inputfile,ofstream &outputfile) {
                         else
                             xmlContent.insert(check_pos+1, opening_tag);
 
-                        cout<<"There is a missing opening tag for "<<tag<<" on line "<<endl;
+                        cout<<"There is a missing opening tag for "<<tag<<" on line "<<current_line<<endl;
                         count_errors++;
                     }
 
@@ -163,7 +138,7 @@ void error_handling(ifstream & inputfile,ofstream &outputfile) {
                 if (pos != string::npos) {
                     xmlContent.insert(pos2+1, opening_tag); // Insert the opening tag before the closing tag
                 }
-                cout<<"There is a missing closing tag for "<<tag<<" on line "<<endl;
+                cout<<"There is a missing closing tag for "<<tag<<" on line "<<current_line<<endl;
                 count_errors++;
             }
 
@@ -171,7 +146,6 @@ void error_handling(ifstream & inputfile,ofstream &outputfile) {
 
         pos = endind + 1;
     }
-
 
     while (!opening_tags.empty()) {
         string opening_tag = opening_tags.back();
@@ -207,8 +181,9 @@ void error_handling(ifstream & inputfile,ofstream &outputfile) {
         }
 
         // Remove the opening tag from the stack
-        cout<<"There is a missing closing tag for "<<opening_tags.back()<<" on line "<<endl;
+        cout<<"There is a missing closing tag for "<<opening_tags.back()<<" on line "<<line_number.back()<<endl;
         opening_tags.pop_back();
+        line_number.pop_back();
         count_errors++;
 
 
@@ -218,6 +193,5 @@ void error_handling(ifstream & inputfile,ofstream &outputfile) {
     outputfile<< xmlContent; // Write the corrected XML content to the new file
     outputfile.close(); // Close the file
 
-    //  return xmlContent;
 
 }
