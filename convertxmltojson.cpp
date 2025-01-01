@@ -1,9 +1,6 @@
 #include "convertxmltojson.h"
 
-
-
-void indentate(int indentation, ofstream &outputFile){
-
+void indent(int indentation, ofstream &outputFile){
     outputFile<<endl;
     if (indentation<0)return;
     while(indentation--)outputFile<<"    ";
@@ -15,14 +12,14 @@ void closeTag(string &jsonString,stack<char>&st) {
     }
 }
 
-void arrayTag(string tagName,string &jsonString,stack<char>&st) {
+void arrayTag(const string& tagName,string &jsonString,stack<char>&st) {
     jsonString.push_back('"');
     jsonString+= tagName;
     jsonString+="\": [";
     st.push(']');
 }
 
-void sentencearrayTag(string tagName, string sentence,string &jsonString,stack<char>&st) {
+void sentenceArrayTag(const string& tagName, const string& sentence, string &jsonString, stack<char>&st) {
     jsonString.push_back('"');
     jsonString+= tagName;
     jsonString+="\": [";
@@ -32,7 +29,7 @@ void sentencearrayTag(string tagName, string sentence,string &jsonString,stack<c
     st.push(']');
 }
 
-void sentenceTag(string tagName, string sentence,string &jsonString) {
+void sentenceTag(const string& tagName, const string& sentence,string &jsonString) {
     jsonString.push_back('"');
     jsonString+= tagName;
     jsonString+="\": \"";
@@ -40,14 +37,14 @@ void sentenceTag(string tagName, string sentence,string &jsonString) {
     jsonString.push_back('"');
 }
 
-void normalTag(string tagName,string &jsonString,stack<char>&st) {
+void normalTag(const string& tagName,string &jsonString,stack<char>&st) {
     jsonString.push_back('"');
     jsonString+= tagName;
     jsonString+="\": {";
     st.push('}');
 }
 
-void justsentence(string sentence,string &jsonString) {
+void justSentence(const string& sentence, string &jsonString) {
     jsonString.push_back('"');
     jsonString+= sentence;
     jsonString.push_back('"');
@@ -64,7 +61,7 @@ void convertXMLtoJSON(ifstream &file, ofstream &outputFile ){
     previousTag = prevXML.substr(poss1 + 1, poss2 - poss1 - 1);
 
     // flags
-    bool arr, sametagname, tagname1, tagname2, sentencetag1, sentencetag2, closingtag1, closingtag2, notasentence;
+    bool arr, sameTagName, tagName1, tagName2, sentenceTag1, sentenceTag2, closingTag1, closingTag2, notSentence;
     jsonString+= "{\"";
     jsonString+= previousTag;
     jsonString+= "\": {";
@@ -82,8 +79,8 @@ void convertXMLtoJSON(ifstream &file, ofstream &outputFile ){
         previousTag = prevXML.substr(poss1 + 1, poss2 - poss1 - 1);
 
         // initialize flags at every iteration
-        arr = false, sametagname = false, tagname1 = false, tagname2 = false;
-        sentencetag1 = false, sentencetag2 = false, closingtag1 = false, closingtag2 = false;
+        arr = false, sameTagName = false, tagName1 = false, tagName2 = false;
+        sentenceTag1 = false, sentenceTag2 = false, closingTag1 = false, closingTag2 = false;
 
         // extract sentence
         string sentence = xmlString.substr(pos2 + 1, pos3 - 1 - pos2 - 1);
@@ -91,64 +88,64 @@ void convertXMLtoJSON(ifstream &file, ofstream &outputFile ){
         // for previous string
         if (poss3 != string::npos) {
             if (poss2 < poss3) {
-                sentencetag1 = true;
+                sentenceTag1 = true;
             } else {
-                closingtag1 = true;
+                closingTag1 = true;
             }
         } else {
-            tagname1 = true;
+            tagName1 = true;
         }
 
         // for current string
         if (pos3 != string::npos) {
             if (pos2 < pos3) {
-                sentencetag2 = true;
+                sentenceTag2 = true;
             } else {
-                closingtag2 = true;
+                closingTag2 = true;
             }
         } else {
-            tagname2 = true;
+            tagName2 = true;
         }
 
         if (tagName == previousTag.substr(0, previousTag.size() - 1)) arr = true;
-        if (previousTag.substr(1) == tagName) sametagname = true;
+        if (previousTag.substr(1) == tagName) sameTagName = true;
 
-        if (tagname1 && tagname2 && arr) {                // if array  <users> <user>
+        if (tagName1 && tagName2 && arr) {                // if array  <users> <user>
             arrayTag(tagName,jsonString,st);
-            notasentence = true;
+            notSentence = true;
 
-        } else if (tagname1 && sentencetag2 && arr) {
-            sentencearrayTag(tagName, sentence,jsonString,st);
-            notasentence = true;
+        } else if (tagName1 && sentenceTag2 && arr) {
+            sentenceArrayTag(tagName, sentence, jsonString, st);
+            notSentence = true;
 
-        } else if (tagname1 && tagname2) {                // not array
-            if (notasentence) {
+        } else if (tagName1 && tagName2) {                // not array
+            if (notSentence) {
                 st.push('}');
                 jsonString.push_back('{');
             }
             normalTag(tagName,jsonString,st);
-            notasentence = false;
+            notSentence = false;
 
-        } else if (tagname1 && sentencetag2) {            // <user> <id>2</id>
-            if (notasentence) {
+        } else if (tagName1 && sentenceTag2) {            // <user> <id>2</id>
+            if (notSentence) {
                 st.push('}');
                 jsonString.push_back('{');
             }
             sentenceTag(tagName, sentence,jsonString);
 
-        } else if (sentencetag1 && sentencetag2) {        // <id>2</id> <name>ahmed</name>
+        } else if (sentenceTag1 && sentenceTag2) {        // <id>2</id> <name>ahmed</name>
             jsonString.push_back(',');
             if (previousTag == tagName) {
-                justsentence(sentence,jsonString);                  // in an array
+                justSentence(sentence, jsonString);                  // in an array
             } else {
                 sentenceTag(tagName, sentence,jsonString);
             }
 
-        } else if (sentencetag1 && tagname2) {           // <body>2</body> <topics>
+        } else if (sentenceTag1 && tagName2) {           // <body>2</body> <topics>
             jsonString.push_back(',');
             normalTag(tagName,jsonString,st);
 
-        } else if (closingtag1 && tagname2 && sametagname) { //</topic> <topic>
+        } else if (closingTag1 && tagName2 && sameTagName) { //</topic> <topic>
             if (!st.empty() && st.top() == ']') {
                 jsonString.push_back(',');
             } else {
@@ -159,16 +156,16 @@ void convertXMLtoJSON(ifstream &file, ofstream &outputFile ){
                 }
             }
 
-        } else if (closingtag1 && closingtag2) {          //</topics> </post>
+        } else if (closingTag1 && closingTag2) {          //</topics> </post>
             closeTag(jsonString,st);
 
-        } else if (closingtag1 && tagname2) {             //</posts> <followers>
+        } else if (closingTag1 && tagName2) {             //</posts> <followers>
             closeTag(jsonString,st);
             closeTag(jsonString,st);
             jsonString.push_back(',');
             normalTag(tagName,jsonString,st);
 
-        } else if (sentencetag1 && closingtag2) {         //<id>2</id> </follower>
+        } else if (sentenceTag1 && closingTag2) {         //<id>2</id> </follower>
             closeTag(jsonString,st);
         }
 
@@ -181,20 +178,17 @@ void convertXMLtoJSON(ifstream &file, ofstream &outputFile ){
 
 
 
-    //prettifying
-
-
+    //prettifying the json file
 
     int indentation=1,flag=0;
-
     for (int i = 0; i < jsonString.size(); ++i) {
         outputFile<<jsonString[i];
-        if(jsonString[i]=='\"' && (jsonString[i+1]==']'||jsonString[i+1]=='}') && flag){indentation--; indentate(indentation,outputFile);  }
-        else if(jsonString[i]=='\"' && (jsonString[i+1]==']'||jsonString[i+1]=='}')) {indentation-=2; indentate(indentation,outputFile);  flag=1;}
-        else if(jsonString[i]=='\"' && (jsonString[i+1]==',')) {outputFile<<",";  indentate(indentation-1,outputFile);i++;  }
-        else if(jsonString[i]=='}' && jsonString[i+1]==',') {outputFile<<jsonString[i+1]; indentate(indentation,outputFile); i++;}
-        else if(jsonString[i]=='{' || jsonString[i]=='[') { indentate(indentation,outputFile); indentation++; }
-        else if(jsonString[i]=='}' || jsonString[i]==']') {indentation--;indentate(indentation,outputFile);  }
+        if(jsonString[i]=='\"' && (jsonString[i+1]==']'||jsonString[i+1]=='}') && flag){indentation--; indent(indentation,outputFile);  }
+        else if(jsonString[i]=='\"' && (jsonString[i+1]==']'||jsonString[i+1]=='}')) {indentation-=2; indent(indentation,outputFile);  flag=1;}
+        else if(jsonString[i]=='\"' && (jsonString[i+1]==',')) {outputFile<<",";  indent(indentation-1,outputFile);i++;  }
+        else if(jsonString[i]=='}' && jsonString[i+1]==',') {outputFile<<jsonString[i+1]; indent(indentation,outputFile); i++;}
+        else if(jsonString[i]=='{' || jsonString[i]=='[') { indent(indentation,outputFile); indentation++; }
+        else if(jsonString[i]=='}' || jsonString[i]==']') {indentation--;indent(indentation,outputFile);  }
     }
     file.close();
 outputFile.close();
