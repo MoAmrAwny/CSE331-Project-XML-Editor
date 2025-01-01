@@ -1,8 +1,5 @@
-#include <iostream>
-#include <fstream>
-using namespace std;
-#include <string>
-#include <vector>
+#pragma once
+#include "../generalHeader.h"
 
 void minifying(const string& fileName , string output);
 
