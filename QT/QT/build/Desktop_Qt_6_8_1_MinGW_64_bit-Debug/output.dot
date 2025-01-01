@@ -1,0 +1,9 @@
+digraph test{
+"Jana ALy" -> "Mohamed Amr"
+"Jana ALy" -> "Mohamed Sherif"
+"Mohamed Amr" -> "Jana ALy"
+"Mohamed Amr" -> "Ganna Ayman"
+"Mohamed Amr" -> "Mohamed Sherif"
+"Mohamed Sherif" -> "Jana ALy"
+"Ganna Ayman" -> "Mohamed Amr"
+}
