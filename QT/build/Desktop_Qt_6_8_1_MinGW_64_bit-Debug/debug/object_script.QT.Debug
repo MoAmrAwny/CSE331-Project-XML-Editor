@@ -1,0 +1,11 @@
+debug/ErrorHandling.o
+debug/PrettifyXml.o
+debug/SearchByWordTopic.o
+debug/XML_to_graph.o
+debug/comp.o
+debug/convertxmltojson.o
+debug/main.o
+debug/mainwindow.o
+debug/minifying.o
+debug/network_analysis.o
+debug/moc_mainwindow.o
